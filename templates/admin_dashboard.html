@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Poster Marketplace{% endblock %}
+
+{% block content %}
+<!-- Linking the main styles to ensure consistency -->
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<div class="container py-5">
+    <!-- Updated Page Header with a more professional Glassmorphism feel -->
+    <div class="dashboard-banner mb-5 shadow-sm">
+        <div class="banner-content d-flex justify-content-between align-items-center flex-wrap gap-4">
+            <div class="text-start">
+                <span class="badge bg-soft-primary text-primary px-3 py-2 rounded-pill mb-2">Platform Control</span>
+                <h1 class="fw-bold mb-1 text-white display-6">Admin Control Center</h1>
+                <p class="mb-0 text-white opacity-75">Analytics and operation oversight for the Poster Marketplace.</p>
+            </div>
+            <div class="text-end d-none d-md-block">
+                <div class="time-pill">
+                    <i class="fas fa-calendar-alt me-2"></i>{{ now.strftime('%d %B, %Y') if now else 'January 2026' }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Analytics Stats Grid -->
+    <div class="row g-4 mb-5">
+        {% set stats = [
+            {'title': 'Total Customers', 'value': total_users, 'icon': 'fa-users', 'color': '#3b82f6', 'label': 'Growth +12%'},
+            {'title': 'Total Orders', 'value': total_orders, 'icon': 'fa-shopping-cart', 'color': '#10b981', 'label': 'Revenue Target'},
+            {'title': 'Total Revenue', 'value': '₹' ~ "%.2f"|format(total_revenue), 'icon': 'fa-wallet', 'color': '#f59e0b', 'label': 'Net Profit'},
+            {'title': 'Active Posters', 'value': total_posters, 'icon': 'fa-image', 'color': '#8b5cf6', 'label': 'Inventory'}
+        ] %}
+        {% for stat in stats %}
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-box h-100 transition-hover">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="icon-circle" style="background-color: {{ stat.color }}20; color: {{ stat.color }};">
+                        <i class="fas {{ stat.icon }}"></i>
+                    </div>
+                    <span class="badge-trend" style="color: {{ stat.color }};">{{ stat.label }}</span>
+                </div>
+                <h3 class="stat-value">{{ stat.value }}</h3>
+                <p class="stat-title">{{ stat.title }}</p>
+                <div class="stat-progress-bg">
+                    <div class="stat-progress-bar" style="width: 70%; background-color: {{ stat.color }};"></div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Quick Management Hub -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-4">
+            <a href="{{ url_for('admin_users') }}" class="btn-hub btn-hub-primary">
+                <div class="hub-icon"><i class="fas fa-user-cog"></i></div>
+                <div class="hub-text">
+                    <span class="hub-title">Manage Users</span>
+                    <span class="hub-desc">View and edit user permissions</span>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('admin_orders') }}" class="btn-hub btn-hub-secondary">
+                <div class="hub-icon"><i class="fas fa-box-open"></i></div>
+                <div class="hub-text">
+                    <span class="hub-title">Global Orders</span>
+                    <span class="hub-desc">Process and track shipments</span>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <div class="dropdown h-100">
+                <button class="btn-hub btn-hub-warning dropdown-toggle border-0 w-100" type="button" data-bs-toggle="dropdown">
+                    <div class="hub-icon"><i class="fas fa-file-export"></i></div>
+                    <div class="hub-text text-start">
+                        <span class="hub-title">Export Reports</span>
+                        <span class="hub-desc">Download system CSVs</span>
+                    </div>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-3 mt-2 rounded-4">
+                    <li><a class="dropdown-item py-2 px-3 rounded-3" href="{{ url_for('export_users') }}"><i class="fas fa-user-circle me-2 text-primary"></i> Export Users</a></li>
+                    <li><a class="dropdown-item py-2 px-3 rounded-3" href="{{ url_for('export_orders') }}"><i class="fas fa-list-alt me-2 text-success"></i> Export Orders</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item py-2 px-3 rounded-3 text-danger fw-bold" href="{{ url_for('export_all') }}"><i class="fas fa-archive me-2"></i> Full System Backup</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional "Poster Box" Order Grid -->
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 fw-bold mb-0 text-dark">Recent Order Tracking</h2>
+            <a href="{{ url_for('admin_orders') }}" class="text-primary text-decoration-none fw-bold small">View All Activity <i class="fas fa-arrow-right ms-1"></i></a>
+        </div>
+        
+        <div class="row g-4">
+            {% for order in recent_orders %}
+            <div class="col-xl-4 col-md-6">
+                <div class="order-box transition-hover h-100">
+                    <div class="order-box-header">
+                        <span class="order-id">#{{ order.order_number.split('-')[-1] }}</span>
+                        {% if order.status.lower() == 'pending' %}
+                            <span class="status-pill status-pending">Pending</span>
+                        {% elif order.status.lower() == 'completed' %}
+                            <span class="status-pill status-completed">Completed</span>
+                        {% else %}
+                            <span class="status-pill status-cancelled">{{ order.status }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="order-box-body">
+                        <div class="customer-info d-flex align-items-center mb-3">
+                            <div class="customer-avatar">
+                                {{ order.full_name[0] | upper }}
+                            </div>
+                            <div class="ms-3">
+                                <p class="customer-name mb-0">{{ order.full_name }}</p>
+                                <p class="customer-email mb-0 text-muted small">{{ order.email }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="order-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Total Amount</span>
+                                <span class="meta-value text-success">₹{{ "%.2f"|format(order.total_amount) }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Date Placed</span>
+                                <span class="meta-value">{{ order.created_at.strftime('%d %b, %Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-box-footer">
+                        <a href="{{ url_for('admin_orders') }}" class="btn-order-action">View Full Record</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center py-5">
+                <div class="empty-state">
+                    <div class="empty-icon">📂</div>
+                    <p class="text-muted">No recent orders found in the system.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        --surface-color: #ffffff;
+        --bg-color: #f8fafc;
+        --border-color: #e2e8f0;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+    }
+
+    body { background-color: var(--bg-color); font-family: "Times New Roman", serif; }
+
+    /* Dashboard Banner */
+    .dashboard-banner {
+        background: var(--primary-gradient);
+        border-radius: 20px;
+        padding: 3rem;
+        color: white;
+    }
+    .time-pill {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 0.75rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Stat Boxes */
+    .stat-box {
+        background: var(--surface-color);
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        border: 1px solid var(--border-color);
+    }
+    .icon-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 0.25rem;
+    }
+    .stat-title {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+    .badge-trend { font-size: 0.75rem; font-weight: 700; }
+    .stat-progress-bg { height: 6px; background: #f1f5f9; border-radius: 10px; margin-top: 1rem; overflow: hidden; }
+    .stat-progress-bar { height: 100%; border-radius: 10px; }
+
+    /* Hub Buttons */
+    .btn-hub {
+        display: flex;
+        align-items: center;
+        padding: 1.25rem;
+        background: white;
+        border-radius: 16px;
+        text-decoration: none;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    .btn-hub:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .hub-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-right: 1.25rem;
+    }
+    .btn-hub-primary .hub-icon { background: #eff6ff; color: #3b82f6; }
+    .btn-hub-secondary .hub-icon { background: #ecfdf5; color: #10b981; }
+    .btn-hub-warning .hub-icon { background: #fffbeb; color: #f59e0b; }
+    .hub-title { display: block; font-weight: 700; color: var(--text-main); font-size: 1.1rem; }
+    .hub-desc { display: block; font-size: 0.8rem; color: var(--text-muted); }
+
+    /* Professional Order Boxes (The "Poster Box" style) */
+    .order-box {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+    .order-box-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px dashed var(--border-color);
+        margin-bottom: 1.25rem;
+    }
+    .order-id { font-weight: 700; color: #3b82f6; font-size: 0.9rem; }
+    .status-pill {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+    }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-completed { background: #d1fae5; color: #065f46; }
+    .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+    .customer-avatar {
+        width: 40px;
+        height: 40px;
+        background: #f1f5f9;
+        color: #3b82f6;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.1rem;
+    }
+    .customer-name { font-weight: 700; color: var(--text-main); }
+    
+    .order-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .meta-item { display: flex; flex-direction: column; }
+    .meta-label { font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem; }
+    .meta-value { font-weight: 600; font-size: 0.9rem; color: var(--text-main); }
+
+    .order-box-footer { margin-top: 1.5rem; }
+    .btn-order-action {
+        display: block;
+        text-align: center;
+        padding: 0.75rem;
+        background: #f8fafc;
+        border-radius: 10px;
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: background 0.2s;
+    }
+    .btn-order-action:hover { background: #eff6ff; }
+
+    .transition-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .transition-hover:hover { transform: translateY(-5px); box-shadow: 0 15px 30px -5px rgba(0,0,0,0.1); }
+
+    .empty-state { padding: 3rem; text-align: center; }
+    .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.2; }
+</style>
+{% endblock %}

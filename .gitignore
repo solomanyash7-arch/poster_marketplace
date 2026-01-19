@@ -1,0 +1,10 @@
+/.venv
+/accounts.db
+/CSV_EXPORT_GUIDE.md
+/dataflow.png
+/Entity Relation.png
+/EXPORT_QUICK_REFERENCE.txt
+/login form.png
+/orders.db
+/uu.pdf
+/__pycache__

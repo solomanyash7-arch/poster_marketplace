@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Manage Users{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>👥 Manage Users</h1>
+    <p class="subtitle">Total Users: {{ users|length }}</p>
+
+    <div class="users-table-wrapper">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Full Name</th>
+                    <th>Roles</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.full_name or '-' }}</td>
+                        <td>
+                            {% for role in user.roles %}
+                                <span class="role-badge">{{ role.name }}</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <span class="status-badge {% if user.is_active %}active{% else %}inactive{% endif %}">
+                                {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </td>
+                        <td>{{ user.created_at.strftime('%d %b %Y') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    h1 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+        color: #7f8c8d;
+        margin-bottom: 2rem;
+    }
+
+    .users-table-wrapper {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .users-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .users-table thead {
+        background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+
+    .users-table th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+    }
+
+    .users-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .users-table tbody tr:hover {
+        background: #f8f9fa;
+    }
+
+    .role-badge {
+        display: inline-block;
+        padding: 0.3rem 0.6rem;
+        background: #d1ecf1;
+        color: #0c5460;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-right: 0.25rem;
+    }
+
+    .status-badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .status-badge.active {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-badge.inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    @media (max-width: 768px) {
+        .users-table {
+            font-size: 0.9rem;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 0.75rem 0.5rem;
+        }
+    }
+</style>
+{% endblock %}

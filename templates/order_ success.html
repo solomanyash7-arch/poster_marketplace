@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmed - Poster Marketplace{% endblock %}
+
+{% block content %}
+<style>
+    .success-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 20px;
+    }
+
+    .success-card {
+        background: white;
+        padding: 50px 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Checkmark Animation */
+    .checkmark-circle {
+        width: 80px;
+        height: 80px;
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        margin-bottom: 20px;
+    }
+
+    .checkmark-circle .background {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #2ecc71;
+        position: absolute;
+    }
+
+    .checkmark-circle .checkmark {
+        border-radius: 5px;
+    }
+
+    .checkmark-circle .checkmark.draw:after {
+        animation-delay: 100ms;
+        animation-duration: 1s;
+        animation-timing-function: ease;
+        animation-name: checkmark;
+        transform: scaleX(-1) rotate(135deg);
+        animation-fill-mode: forwards;
+    }
+
+    .checkmark-circle .checkmark:after {
+        opacity: 1;
+        height: 40px;
+        width: 20px;
+        transform-origin: left top;
+        border-right: 4px solid white;
+        border-top: 4px solid white;
+        content: '';
+        left: 20px;
+        top: 40px;
+        position: absolute;
+    }
+
+    @keyframes checkmark {
+        0% { height: 0; width: 0; opacity: 1; }
+        20% { height: 0; width: 20px; opacity: 1; }
+        40% { height: 40px; width: 20px; opacity: 1; }
+        100% { height: 40px; width: 20px; opacity: 1; }
+    }
+
+    h1 {
+        color: #2d3436;
+        font-size: 28px;
+        margin-bottom: 10px;
+        font-weight: 800;
+    }
+
+    p {
+        color: #636e72;
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .btn-home {
+        display: inline-block;
+        background: #2d3436;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(45, 52, 54, 0.2);
+    }
+
+    .btn-home:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(45, 52, 54, 0.3);
+        background: #000;
+    }
+</style>
+
+<div class="success-wrapper">
+    <div class="success-card">
+        <div class="checkmark-circle">
+            <div class="background"></div>
+            <div class="checkmark draw"></div>
+        </div>
+        
+        <h1>Order Successful!</h1>
+        <p>Thank you for your purchase. Your order has been placed successfully and is being processed.</p>
+        
+        <a href="{{ url_for('index') }}" class="btn-home">
+            Continue Shopping
+        </a>
+    </div>
+</div>
+{% endblock %}

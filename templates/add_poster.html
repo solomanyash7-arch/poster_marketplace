@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Add Poster - Poster Marketplace{% endblock %}
+
+{% block content %}
+<section class="add-poster-section">
+    <div class="container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1>Add New Poster</h1>
+                <p>Upload your amazing artwork to share with the community</p>
+            </div>
+            <form method="POST" enctype="multipart/form-data" class="poster-form">
+                <div class="form-group">
+                    <label for="title">Poster Title</label>
+                    <input type="text" id="title" name="title" required class="form-input">
+                    <small class="form-help">Give your poster a catchy, descriptive title</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" required class="form-textarea" rows="4"></textarea>
+                    <small class="form-help">Describe what makes this poster special</small>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="price">Price (₹)</label>
+                        <input type="number" id="price" name="price" step="0.01" min="0" required class="form-input">
+                        <small class="form-help">Set a competitive price</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required class="form-select">
+                            <option value="">Select Category</option>
+                            <option value="Anime">Anime</option>
+                            <option value="Gaming">Gaming</option>
+                        </select>
+                        <small class="form-help">Choose the best category</small>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">Poster Image</label>
+                    <div class="file-upload-area">
+                        <input type="file" id="image" name="image" accept="image/*" required class="form-file">
+                        <div class="file-upload-text">
+                            <span class="upload-icon">📁</span>
+                            <span>Click to upload or drag and drop</span>
+                            <small>PNG, JPG, JPEG, GIF up to 10MB</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        <span>🚀</span> Upload Poster
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

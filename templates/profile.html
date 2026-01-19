@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Poster Marketplace{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {% if current_user.profile_image %}
+                    <img src="{{ url_for('serve_upload', filename=current_user.profile_image) }}" alt="Profile">
+                {% else %}
+                    <div class="default-avatar">👤</div>
+                {% endif %}
+            </div>
+            <div class="profile-info">
+                <h1>{{ current_user.full_name or current_user.username }}</h1>
+                <p class="username">@{{ current_user.username }}</p>
+                <p class="email">{{ current_user.email }}</p>
+                <a href="{{ url_for('edit_profile') }}" class="btn btn-primary">✏️ Edit Profile</a>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <!-- Personal Information -->
+            <div class="profile-card">
+                <h2>📋 Personal Information</h2>
+                <div class="info-item">
+                    <label>Full Name:</label>
+                    <p>{{ current_user.full_name or 'Not provided' }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Email:</label>
+                    <p>{{ current_user.email }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Phone:</label>
+                    <p>{{ current_user.phone or 'Not provided' }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Bio:</label>
+                    <p>{{ current_user.profile_bio or 'No bio added' }}</p>
+                </div>
+            </div>
+
+            <!-- Account Status -->
+            <div class="profile-card">
+                <h2>🔐 Account Status</h2>
+                <div class="info-item">
+                    <label>Account Status:</label>
+                    <span class="badge badge-success">{% if current_user.is_active %}Active{% else %}Inactive{% endif %}</span>
+                </div>
+                <div class="info-item">
+                    <label>Email Verified:</label>
+                    <span class="badge {% if current_user.is_email_verified %}badge-success{% else %}badge-warning{% endif %}">
+                        {% if current_user.is_email_verified %}✓ Verified{% else %}⚠️ Pending{% endif %}
+                    </span>
+                </div>
+                <div class="info-item">
+                    <label>Member Since:</label>
+                    <p>{{ current_user.created_at.strftime('%B %d, %Y') }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Roles:</label>
+                    <p>
+                        {% for role in current_user.roles %}
+                            <span class="badge badge-info">{{ role.name }}</span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="profile-card">
+                <h2>📊 Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat">
+                        <h3>{{ current_user.posters|length }}</h3>
+                        <p>Posters Listed</p>
+                    </div>
+                    <div class="stat">
+                        <h3>{{ current_user.orders|length }}</h3>
+                        <p>Orders Placed</p>
+                    </div>
+                    <div class="stat">
+                        <h3>₹{{ (current_user.orders|sum(attribute='total_amount'))|round(0) }}</h3>
+                        <p>Total Spent</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline">📊 Go to Dashboard</a>
+            <a href="{{ url_for('my_orders') }}" class="btn btn-outline">📦 View Orders</a>
+            {% if current_user.has_role('Seller') %}
+                <a href="{{ url_for('add_poster') }}" class="btn btn-outline">➕ Add New Poster</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-header {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid #f5f7fa;
+        align-items: center;
+    }
+
+    .profile-avatar {
+        flex-shrink: 0;
+    }
+
+    .profile-avatar img,
+    .default-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+    }
+
+    .profile-info h1 {
+        margin: 0 0 0.5rem 0;
+        color: #2c3e50;
+    }
+
+    .username {
+        color: #7f8c8d;
+        margin: 0.25rem 0;
+    }
+
+    .email {
+        color: #3498db;
+        margin: 0.25rem 0 1rem 0;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .profile-card {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 6px;
+        border-left: 4px solid #667eea;
+    }
+
+    .profile-card h2 {
+        margin-top: 0;
+        color: #2c3e50;
+        font-size: 1.3rem;
+    }
+
+    .info-item {
+        margin-bottom: 1rem;
+    }
+
+    .info-item label {
+        display: block;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-item p {
+        margin: 0;
+        color: #555;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .badge-success {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .badge-warning {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .badge-info {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .stat {
+        background: white;
+        padding: 1rem;
+        text-align: center;
+        border-radius: 4px;
+    }
+
+    .stat h3 {
+        margin: 0;
+        font-size: 1.8rem;
+        color: #667eea;
+    }
+
+    .stat p {
+        margin: 0.5rem 0 0 0;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    .quick-links {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding-top: 1rem;
+        border-top: 2px solid #f5f7fa;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-block;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-outline {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+    }
+
+    .btn-outline:hover {
+        background: #667eea;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-links {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}

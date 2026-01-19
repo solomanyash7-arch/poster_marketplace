@@ -1,0 +1,6 @@
+Flask>=2.0
+Flask-SQLAlchemy>=2.5
+Flask-Login>=0.6
+Werkzeug>=2.0
+Pillow>=9.0.0  # for image validation
+PyMySQL>=1.0  # optional; only needed if you set DATABASE_URL to a mysql+pymysql URI

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="category-header">
+        <h1>{{ category }} Collection</h1>
+    </div>
+
+    <div class="poster-grid">
+        {% if posters %}
+            {% for poster in posters %}
+            <div class="poster-card">
+                <a href="#" class="poster-link">
+                    <div class="image-container">
+                        <img src="{{ url_for('serve_upload', filename=poster.image_filename) }}" alt="{{ poster.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <h3>{{ poster.title }}</h3>
+                        <p class="price">₹{{ poster.price }}</p>
+                        <p class="size">24x36 inches</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>There are no posters in the {{ category }} collection yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}
