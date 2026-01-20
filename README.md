@@ -1,46 +1,86 @@
-# Hi there, I'm Yash Soloman Navgire! 👋
+# Poster Marketplace
 
-### 👨‍💻 Profession
-**Audio Engineer | Python Developer | BCA Student**
+A web-based marketplace application for buying and selling posters, built with Python and Flask.
 
----
+## 📌 Overview
 
-### 🛠️ Top Skills & Technologies
+Poster Marketplace is a lightweight e-commerce platform that allows users to browse a collection of posters and list their own for sale. The application handles user data and product listings using a local SQLite database, ensuring a simple yet functional backend.
 
-* **Audio:** Soundcraft Ui Series, Digital Mixing, Stage Signal Flow
-* **Code:** Python (Flask), HTML/CSS, MySQL/SQLite
-* **Tools:** Live Sound Reinforcement, Networked Audio
+## 🚀 Features
 
-### 🔒 Interests & Hobbies
+- **User Authentication**: Secure user registration and login functionality.
+- **Product Listing**: Browse available posters with details.
+- **Sell Your Art**: Users can upload and list their own posters for sale.
+- **Image Management**: Uploaded poster images are securely stored in the `uploads/` directory.
+- **Database Integration**: Utilizes SQLite (`sellers.db`) for persistent data storage of users and products.
 
-* Digital Forensics & AI Learning
-* Live Sound Production
-* Keyboard & Music Teaching
-* Football (Messi Fan! ⚽)
+## 🛠️ Tech Stack
 
----
+- **Backend**: Python, Flask
+- **Frontend**: HTML, CSS (stored in `static/` and `templates/`)
+- **Database**: SQLite
+- **File Handling**: Local filesystem storage for images
 
-### 🌐 Connect with Me
+## 📂 Project Structure
 
-* [**GitHub Profile**](https://github.com/yashsoloman7)
-* [**LinkedIn Profile**](https://www.linkedin.com/in/yash-soloman-navgire-923726356/)
-* [**YouTube Channel**](https://www.youtube.com/@yashsoloman)
-* [**Instagram**](https://www.instagram.com/beannbag_/)
+```text
+poster_marketplace/
+├── order/           # Order processing logic
+├── seed_images/     # Default/Initial images for the application
+├── static/          # CSS, JavaScript, and static images
+├── templates/       # HTML templates for the UI
+├── uploads/         # Directory for user-uploaded poster images
+├── app.py           # Main application entry point (Flask app)
+├── sellers.db       # SQLite database file
+├── requirements.txt # Python dependencies
+├── .gitignore       # Git ignore file
+└── README.md        # Project documentation
+⚙️ Installation & Setup
+Follow these steps to get a copy of the project up and running on your local machine.
 
----
+Prerequisites
+Python 3.x installed on your system.
 
-### 🎶 Fun Fact
+pip (Python package manager).
 
-When I'm not balancing EQ levels on a digital mixer or debugging Flask routes, you'll find me composing tunes on my keyboard or ensuring church events run smoothly. I treat code bugs like audio feedback—I identify the frequency and eliminate it!
+Steps
+Clone the Repository
 
-> *"Mixing the logic of code with the dynamics of live sound — that's my rhythm."*
+Bash
+git clone [https://github.com/yashsoloman7/poster_marketplace.git](https://github.com/yashsoloman7/poster_marketplace.git)
+cd poster_marketplace
+Create a Virtual Environment (Optional but Recommended)
 
----
+Bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
 
-### 🚀 Live Projects
+# macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+Install Dependencies
 
-| Project Name | Description | Live Link |
-| :--- | :--- | :--- |
-| **Poster Marketplace** | An e-commerce platform for buying and selling digital artwork and posters (Python/Flask). | [View Code](https://github.com/yashsoloman7/poster_marketplace) |
-| **CC Church Bhilai** | Official website for the Christian Community Church in Bhilai, featuring events, sermons, and community updates. | [Visit](https://ccchurchbhilai.com) |
-| **Thinkick** | A creative agency offering branding, web development, and digital marketing solutions. | [Visit](https://thinkick.com) |
+Bash
+pip install -r requirements.txt
+Run the Application
+
+Bash
+python app.py
+Access the App Open your web browser and go to: http://127.0.0.1:5000
+
+🤝 Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+Fork the project
+
+Create your feature branch (git checkout -b feature/AmazingFeature)
+
+Commit your changes (git commit -m 'Add some AmazingFeature')
+
+Push to the branch (git push origin feature/AmazingFeature)
+
+Open a Pull Request
+
+📄 License
+This project is open source.
